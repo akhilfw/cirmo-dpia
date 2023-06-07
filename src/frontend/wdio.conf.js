@@ -23,23 +23,12 @@ exports.config = {
     // will be called from there.
     //
     specs: [
-        './test/specs/**/*.js'
+        './e2e-cucu-test/features/**/*.feature'
     ],
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
     ],
-    suites: {
-        sanity: [
-            './test/specs/sanity/*.js'
-        ],
-        acceptance: [
-            './test/specs/acceptance/*.js'
-        ],
-        e2e: [
-            './test/specs/**/*.js',
-        ]
-    },
     //
     // ============
     // Capabilities
@@ -64,10 +53,10 @@ exports.config = {
     //
     capabilities: [{
         // capabilities for local browser web tests
-        browserName: 'chrome' ,
+        browserName: 'chrome',
         'goog:chromeOptions': {
            args: ['headless', 'disable-gpu']
-         }
+         } // or "firefox", "microsoftedge", "safari"
     }],
     //
     // ===================
@@ -101,11 +90,9 @@ exports.config = {
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
     baseUrl: 'http://localhost:8080',
-    mpoPass: '',
-    screenshotPath: './test/screenshots',
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 15000,
+    waitforTimeout: 10000,
     //
     // Default timeout in milliseconds for request
     // if browser driver or grid doesn't send response
@@ -126,7 +113,7 @@ exports.config = {
     //
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
-    framework: 'mocha',
+    framework: 'cucumber',
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
@@ -140,16 +127,39 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec'],
-
-    
-    //
-    // Options to be passed to Mocha.
-    // See the full list at http://mochajs.org/
-    mochaOpts: {
-        ui: 'bdd',
-        timeout: 100000
+    reporters: ['spec',[ 'cucumberjs-json', {
+        jsonFolder: 'e2e-cucu-test/reporter/json/',
+        language: 'en',
     },
+],],
+
+    //
+    // If you are using Cucumber you need to specify the location of your step definitions.
+    cucumberOpts: {
+        // <string[]> (file/dir) require files before executing features
+        require: ['./e2e-cucu-test/features/step-definitions/steps.js'],
+        // <boolean> show full backtrace for errors
+        backtrace: false,
+        // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
+        requireModule: [],
+        // <boolean> invoke formatters without executing steps
+        dryRun: false,
+        // <boolean> abort the run on first failure
+        failFast: false,
+        // <boolean> hide step definition snippets for pending steps
+        snippets: true,
+        // <boolean> hide source uris
+        source: true,
+        // <boolean> fail if there are any undefined or pending steps
+        strict: false,
+        // <string> (expression) only execute the features or scenarios with tags matching the expression
+        tagExpression: '',
+        // <number> timeout for step definitions
+        timeout: 60000,
+        // <boolean> Enable this config to treat undefined definitions as warnings.
+        ignoreUndefinedDefinitions: false
+    },
+    
     //
     // =====
     // Hooks
@@ -212,48 +222,65 @@ exports.config = {
     // beforeCommand: function (commandName, args) {
     // },
     /**
-     * Hook that gets executed before the suite starts
-     * @param {object} suite suite details
+     * Cucumber Hooks
+     *
+     * Runs before a Cucumber Feature.
+     * @param {string}                   uri      path to feature file
+     * @param {GherkinDocument.IFeature} feature  Cucumber feature object
      */
-    // beforeSuite: function (suite) {
+    // beforeFeature: function (uri, feature) {
     // },
     /**
-     * Function to be executed before a test (in Mocha/Jasmine) starts.
+     *
+     * Runs before a Cucumber Scenario.
+     * @param {ITestCaseHookParameter} world    world object containing information on pickle and test step
+     * @param {object}                 context  Cucumber World object
      */
-    // beforeTest: function (test, context) {
+    // beforeScenario: function (world, context) {
     // },
     /**
-     * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
-     * beforeEach in Mocha)
+     *
+     * Runs before a Cucumber Step.
+     * @param {Pickle.IPickleStep} step     step data
+     * @param {IPickle}            scenario scenario pickle
+     * @param {object}             context  Cucumber World object
      */
-    // beforeHook: function (test, context) {
+    // beforeStep: function (step, scenario, context) {
     // },
     /**
-     * Hook that gets executed _after_ a hook within the suite starts (e.g. runs after calling
-     * afterEach in Mocha)
+     *
+     * Runs after a Cucumber Step.
+     * @param {Pickle.IPickleStep} step             step data
+     * @param {IPickle}            scenario         scenario pickle
+     * @param {object}             result           results object containing scenario results
+     * @param {boolean}            result.passed    true if scenario has passed
+     * @param {string}             result.error     error stack if scenario failed
+     * @param {number}             result.duration  duration of scenario in milliseconds
+     * @param {object}             context          Cucumber World object
      */
-    // afterHook: function (test, context, { error, result, duration, passed, retries }) {
+    // afterStep: function (step, scenario, result, context) {
     // },
     /**
-     * Function to be executed after a test (in Mocha/Jasmine only)
-     * @param {object}  test             test object
-     * @param {object}  context          scope object the test was executed with
-     * @param {Error}   result.error     error object in case the test fails, otherwise `undefined`
-     * @param {*}       result.result    return object of test function
-     * @param {number}  result.duration  duration of test
-     * @param {boolean} result.passed    true if test has passed, otherwise false
-     * @param {object}  result.retries   informations to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
+     *
+     * Runs after a Cucumber Scenario.
+     * @param {ITestCaseHookParameter} world            world object containing information on pickle and test step
+     * @param {object}                 result           results object containing scenario results
+     * @param {boolean}                result.passed    true if scenario has passed
+     * @param {string}                 result.error     error stack if scenario failed
+     * @param {number}                 result.duration  duration of scenario in milliseconds
+     * @param {object}                 context          Cucumber World object
      */
-    // afterTest: function(test, context, { error, result, duration, passed, retries }) {
+    // afterScenario: function (world, result, context) {
     // },
-
-
     /**
-     * Hook that gets executed after the suite has ended
-     * @param {object} suite suite details
+     *
+     * Runs after a Cucumber Feature.
+     * @param {string}                   uri      path to feature file
+     * @param {GherkinDocument.IFeature} feature  Cucumber feature object
      */
-    // afterSuite: function (suite) {
+    // afterFeature: function (uri, feature) {
     // },
+    
     /**
      * Runs after a WebdriverIO command gets executed
      * @param {string} commandName hook command name
