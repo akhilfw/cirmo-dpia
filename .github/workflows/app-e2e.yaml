@@ -22,7 +22,7 @@ jobs:
         run: |
            cd ./src/frontend
            npm install
-           mpoPass=$mpoPass npm run wdio-test
+           mpoPass=$mpoPass npm run cucumber-test
            npm run cucumber-report
 
       #Generate Cucumber report and upload artifact  
