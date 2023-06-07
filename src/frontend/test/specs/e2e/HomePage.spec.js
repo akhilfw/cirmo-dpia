@@ -49,7 +49,7 @@ describe('Test DPIA HomePage', () => {
     const createHeader = await $("//h1[contains(text(),'Create New')]");
     await createTab.waitForClickable();
     await createTab.click();
-    await expect(createHeader).toBeDisplayed();
+    await createHeader.waitForDisplayed();
     
   });
 
@@ -61,7 +61,7 @@ describe('Test DPIA HomePage', () => {
     const Footer = await $("//footer"); 
     await Footer.scrollIntoView();
     const pagination = await $("//div[@class='pagination__container__left__text']");
-    await expect(pagination).toBeDisplayed();
+    await pagination.waitForDisplayed();
 
     const rows = await $("//div[@class='pagination__container__left']//span[@class='rows-per-page'][contains(text(),'Rows per page')]");
     expect(rows).toHaveText('Rows per page');
