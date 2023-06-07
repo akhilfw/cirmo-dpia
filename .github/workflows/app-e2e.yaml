@@ -23,4 +23,10 @@ jobs:
            cd ./src/frontend
            npm install
            mpoPass=$mpoPass npm run wdio-test
-        
+           
+      #Generate Allure report and upload artifact  
+      - name: Generate Allure report and upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-artifact
+          path: ./src/frontend/allure-report/

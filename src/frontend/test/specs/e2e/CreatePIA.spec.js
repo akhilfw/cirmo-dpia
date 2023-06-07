@@ -55,7 +55,7 @@ describe('Create a PIA ', () => {
     await createTab.waitForDisplayed();
     await createTab.waitForClickable();
     await createTab.click();
-    await expect(createHeader).toBeDisplayed();
+    await createHeader.waitForDisplayed();
     await startPIA.waitForDisplayed();
     await startPIA.waitForClickable();
     await startPIA.click();
