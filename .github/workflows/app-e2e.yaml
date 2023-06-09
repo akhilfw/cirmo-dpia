@@ -23,11 +23,10 @@ jobs:
            cd ./src/frontend
            npm install
            mpoPass=$mpoPass npm run cucumber-test
-           npm run cucumber-report
 
       #Generate Cucumber report and upload artifact  
       - name: Generate Cucumber report and upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: cucumber-artifact
-          path: ./src/frontend/e2e-cucu-test/reporter/*html
+          path: ./src/frontend/e2e-cucu-test/reporter/htmlreport/

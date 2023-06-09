@@ -1,3 +1,7 @@
+import fs from 'node:fs/promises'
+// Import the module
+import { generate } from 'multiple-cucumber-html-reporter'
+
 exports.config = {
     //
     // ====================
@@ -23,7 +27,7 @@ exports.config = {
     // will be called from there.
     //
     specs: [
-        './e2e-cucu-test/features/**/*.feature'
+        './e2e-cucu-test/features/*.feature'
     ],
     // Patterns to exclude.
     exclude: [
@@ -92,7 +96,7 @@ exports.config = {
     baseUrl: 'http://localhost:8080',
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+    waitforTimeout: 20000,
     //
     // Default timeout in milliseconds for request
     // if browser driver or grid doesn't send response
@@ -137,7 +141,7 @@ exports.config = {
     // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {
         // <string[]> (file/dir) require files before executing features
-        require: ['./e2e-cucu-test/features/step-definitions/steps.js'],
+        require: ['./e2e-cucu-test/features/step-definitions/*.js'],
         // <boolean> show full backtrace for errors
         backtrace: false,
         // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
@@ -173,8 +177,10 @@ exports.config = {
      * @param {object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onPrepare: function (config, capabilities) {
-    // },
+    onPrepare: function (config, capabilities) {
+
+        return fs.rm('e2e-cucu-test/reporter/', { recursive: true });
+    },
     /**
      * Gets executed before a worker process is spawned and can be used to initialise specific service
      * for that worker as well as modify runtime environments in an async fashion.
@@ -315,8 +321,17 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {<Object>} results object containing test results
      */
-    // onComplete: function(exitCode, config, capabilities, results) {
-    // },
+    onComplete: function(exitCode, config, capabilities, results) {
+
+        generate({
+            // Required
+            // This part needs to be the same path where you store the JSON files
+            // default = '.tmp/json/'
+            jsonDir: 'e2e-cucu-test/reporter/json/',
+            reportPath: 'e2e-cucu-test/reporter/htmlreport/',
+            // for more options see https://github.com/wswebcreation/multiple-cucumber-html-reporter#options
+          });
+    },
     /**
     * Gets executed when a refresh happens.
     * @param {string} oldSessionId session ID of the old session
