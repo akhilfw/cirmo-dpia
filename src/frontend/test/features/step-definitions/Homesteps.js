@@ -9,3 +9,4 @@ Then(/^Check "([^"]*)" tab is displayed$/, async(Links) => {
 	await homePage.checkTab(Links)
 });
        
+

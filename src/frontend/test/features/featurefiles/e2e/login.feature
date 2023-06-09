@@ -1,5 +1,5 @@
 Feature: Log in to DPIA
-
+  
   Scenario Outline: As <role> user, I am able to login and verify title
 
     Given I am on the login page
@@ -25,6 +25,20 @@ Feature: Log in to DPIA
       | DORGALE  | MPO     |
       | DOND     | Drafter |
       | ANDYA    | CPO     |
+  
+  Scenario Outline: As <role> user, I am able to verify BC Logo
+
+    Given I am on the login page
+    When I login with user <username> having role <role>
+    Then I am able to verify BC Logo
+    And I sign out successfully
+
+    Examples:
+      | username | role    |
+      | DORGALE  | MPO     |
+      | DOND     | Drafter |
+      | ANDYA    | CPO     |
+
 
   Scenario Outline: Login with Invalid <role> username
 
@@ -51,15 +65,3 @@ Feature: Log in to DPIA
       | DOND     | Drafter | Wrong2   |
       | ANDYA    | CPO     | Wrong3   |
 
-  Scenario Outline: As <role> user, I am able to verify BC Logo
-
-    Given I am on the login page
-    When I login with user <username> having role <role>
-    Then I am able to verify BC Logo
-    And I sign out successfully
-
-    Examples:
-      | username | role    |
-      | DORGALE  | MPO     |
-      | DOND     | Drafter |
-      | ANDYA    | CPO     |

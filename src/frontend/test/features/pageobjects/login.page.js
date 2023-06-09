@@ -56,9 +56,16 @@ class LoginPage extends Page {
 
     }
 
+    async verifyBCLogo () {
+        await this.BCLogo.waitForDisplayed();
+        await browser.pause(2000);  
+        await browser.deleteCookies();
+    }
+
     async InvalidUsernamePassword () {
         await this.ExceptionMessage.waitForDisplayed();
         await browser.deleteCookies();
+        await browser.reloadSession();
     }
 
     async InvalidPassword (username,password) {
@@ -105,12 +112,11 @@ class LoginPage extends Page {
         await browser.pause(2000);
         await this.loginButton.waitForDisplayed({ timeout: 2000 });
         await browser.deleteCookies();
+        await browser.reloadSession();
+        
     }
 
-    async verifyBCLogo () {
-        await this.BCLogo.waitForDisplayed();
-        await browser.deleteCookies();
-    }
+    
     
     /**
      * overwrite specific options to adapt it to page object
