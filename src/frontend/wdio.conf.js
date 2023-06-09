@@ -27,12 +27,23 @@ exports.config = {
     // will be called from there.
     //
     specs: [
-        './e2e-cucu-test/features/*.feature'
+        './test/features/featurefiles/**/*.feature'
     ],
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
     ],
+    suites: {
+        sanity: [
+            './test/features/featurefiles/sanity/*.feature'
+        ],
+        acceptance: [
+            './test/features/featurefiles/acceptance/*.feature'
+        ],
+        e2e: [
+            './test/features/featurefiles/**/*.feature',
+        ]
+    },
     //
     // ============
     // Capabilities
@@ -132,7 +143,7 @@ exports.config = {
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
     reporters: ['spec',[ 'cucumberjs-json', {
-        jsonFolder: 'e2e-cucu-test/reporter/json/',
+        jsonFolder: 'test/reporter/json/',
         language: 'en',
     },
 ],],
@@ -141,7 +152,7 @@ exports.config = {
     // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {
         // <string[]> (file/dir) require files before executing features
-        require: ['./e2e-cucu-test/features/step-definitions/*.js'],
+        require: ['./test/features/step-definitions/*.js'],
         // <boolean> show full backtrace for errors
         backtrace: false,
         // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
@@ -179,7 +190,7 @@ exports.config = {
      */
     onPrepare: function (config, capabilities) {
 
-        return fs.rm('e2e-cucu-test/reporter/', { recursive: true });
+        return fs.rm('test/reporter/', { recursive: true });
     },
     /**
      * Gets executed before a worker process is spawned and can be used to initialise specific service
@@ -327,8 +338,8 @@ exports.config = {
             // Required
             // This part needs to be the same path where you store the JSON files
             // default = '.tmp/json/'
-            jsonDir: 'e2e-cucu-test/reporter/json/',
-            reportPath: 'e2e-cucu-test/reporter/htmlreport/',
+            jsonDir: 'test/reporter/json/',
+            reportPath: 'test/reporter/htmlreport/',
             // for more options see https://github.com/wswebcreation/multiple-cucumber-html-reporter#options
           });
     },

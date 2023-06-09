@@ -11,4 +11,13 @@ module.exports = class Page {
         // return browser.url(`https://the-internet.herokuapp.com/${path}`)
         return browser.url('/');
     }
+
+    maximize (path) {
+        // return browser.url(`https://the-internet.herokuapp.com/${path}`)
+        return browser.maximizeWindow();
+    }
+
+    
+    
+    
 }

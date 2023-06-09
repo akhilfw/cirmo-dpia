@@ -6,8 +6,10 @@ const pages = {
     login: LoginPage
 }
 
+
 Given(/^I am on the (\w+) page$/, async (page) => {
     await pages[page].open()
+    await pages[page].maximize()
 });
 
 Given(/^Click on login button$/, async () => {
